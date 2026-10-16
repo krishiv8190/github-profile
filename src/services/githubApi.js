@@ -3,9 +3,7 @@ const GITHUB_USERNAME = "shreeramk";
 const CONTRIBUTIONS_API_URL = "https://github-contributions-api.jogruber.de/v4";
 
 async function fetchGitHubData(endpoint, signal) {
-  const response = await fetch(`${GITHUB_API_URL}${endpoint}`, {
-    signal,
-  });
+  const response = await fetch(`${GITHUB_API_URL}${endpoint}`, { signal });
 
   if (!response.ok) {
     throw new Error(
@@ -22,8 +20,12 @@ export function getGitHubProfile() {
 
 export function getGitHubRepositories() {
   return fetchGitHubData(
-    `/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6&type=owner`,
+    `/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&type=owner`,
   );
+}
+
+export function getGitHubOrganizations(signal) {
+  return fetchGitHubData(`/users/${GITHUB_USERNAME}/orgs`, signal);
 }
 
 export async function getGitHubContributions(year, signal) {
@@ -33,9 +35,7 @@ export async function getGitHubContributions(year, signal) {
   );
 
   if (!response.ok) {
-    throw new Error(
-      `Contributions request failed: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Contributions request failed: ${response.status}`);
   }
 
   return response.json();

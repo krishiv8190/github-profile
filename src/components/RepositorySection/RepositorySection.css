@@ -1,0 +1,177 @@
+.repository-section {
+  min-width: 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-heading h2,
+.repository-section h2 {
+  margin: 0;
+  color: #1f2328;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.repository-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.repository-grid .repository-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 148px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.repository-grid .repository-description,
+.repository-grid .repository-fork-source {
+  text-align: left;
+}
+
+.repository-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.repository-name {
+  min-width: 0;
+  color: #0969da;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.repository-name:hover {
+  text-decoration: underline;
+}
+
+.visibility-label {
+  flex-shrink: 0;
+  padding: 0 7px;
+  color: #59636e;
+  font-size: 12px;
+  line-height: 18px;
+  border: 1px solid #d1d9e0;
+  border-radius: 999px;
+}
+
+.repository-fork-source {
+  margin: 2px 0 0;
+  color: #59636e;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repository-fork-source a {
+  color: #59636e;
+  text-decoration: underline;
+  text-decoration-color: #d1d9e0;
+  text-underline-offset: 2px;
+}
+
+.repository-description {
+  margin: 10px 0 0;
+  color: #59636e;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repository-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding-top: 12px;
+  color: #59636e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.repository-language,
+.repository-stars,
+.repository-fork,
+.repository-forks {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.language-dot {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #8c959f;
+}
+
+.language-javascript {
+  background: #f1e05a;
+}
+
+.language-typescript {
+  background: #3178c6;
+}
+
+.language-python,
+.language-jupyter-notebook {
+  background: #3572a5;
+}
+
+.language-dart {
+  background: #00b4ab;
+}
+
+.language-html {
+  background: #e34c26;
+}
+
+.language-css {
+  background: #663399;
+}
+
+.language-java {
+  background: #b07219;
+}
+
+.language-c {
+  background: #555;
+}
+
+.language-c-- {
+  background: #f34b7d;
+}
+
+@media (max-width: 48rem) {
+  .repository-grid {
+    gap: 0.75rem;
+  }
+
+  .repository-grid .repository-card {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 36rem) {
+  .repository-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
