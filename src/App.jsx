@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Header from "./components/Header";
-import ProfileTabs from "./components/ProfileTabs";
-import ProfileSidebar from "./components/ProfileSidebar";
-import RepositorySection from "./components/RepositorySection";
+import Header from "./components/Header/Header";
+import ProfileTabs from "./components/ProfileTabs/ProfileTabs";
+import ProfileSidebar from "./components/ProfileSidebar/ProfileSidebar";
+import RepositorySection from "./components/RepositorySection/RepositorySection";
+import ContributionCalendar from "./components/ContributionCalendar/ContributionCalendar";
 import { useGitHubProfile } from "./hooks/useGitHubProfile";
 import useGitHubRepositories from "./hooks/useGitHubRepositories";
-import ContributionCalendar from "./components/ContributionCalendar";
+import useGitHubOrganizations from "./hooks/useGitHubOrganizations";
 import "./App.css";
 
 const App = () => {
@@ -22,6 +23,12 @@ const App = () => {
     loading: repositoriesLoading,
     error: repositoriesError,
   } = useGitHubRepositories();
+
+  const {
+    organizations,
+    loading: organizationsLoading,
+    error: organizationsError,
+  } = useGitHubOrganizations();
 
   return (
     <div className="app">
@@ -45,7 +52,12 @@ const App = () => {
             </p>
           </aside>
         ) : (
-          <ProfileSidebar profile={profile} />
+          <ProfileSidebar
+            profile={profile}
+            organizations={organizations}
+            organizationsLoading={organizationsLoading}
+            organizationsError={organizationsError}
+          />
         )}
 
         <div className="main-content">
@@ -56,7 +68,6 @@ const App = () => {
                 loading={repositoriesLoading}
                 error={repositoriesError}
               />
-
               <ContributionCalendar />
             </>
           )}

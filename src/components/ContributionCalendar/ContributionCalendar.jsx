@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useGitHubContributions from "../hooks/useGitHubContributions";
+import useGitHubContributions from "../../hooks/useGitHubContributions";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const AVAILABLE_YEARS = Array.from(
