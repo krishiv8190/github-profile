@@ -25,7 +25,7 @@ const Header = () => {
           </svg>
         </a>
 
-        <strong className="header-username">krishiv8190</strong>
+        <strong className="header-username">shreeramk</strong>
       </div>
 
       <div className="header-actions">
