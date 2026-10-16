@@ -5,6 +5,7 @@ import ProfileSidebar from "./components/ProfileSidebar";
 import RepositorySection from "./components/RepositorySection";
 import { useGitHubProfile } from "./hooks/useGitHubProfile";
 import useGitHubRepositories from "./hooks/useGitHubRepositories";
+import ContributionCalendar from "./components/ContributionCalendar";
 import "./App.css";
 
 const App = () => {
@@ -56,12 +57,7 @@ const App = () => {
                 error={repositoriesError}
               />
 
-              <section className="contribution-section">
-                <h2>Contribution activity</h2>
-                <p className="section-message">
-                  Contribution calendar coming next.
-                </p>
-              </section>
+              <ContributionCalendar />
             </>
           )}
 
