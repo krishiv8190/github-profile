@@ -18,12 +18,36 @@ const ProfileSidebar = ({
   const bioLines = (profile.bio || "").split(/\r?\n/).filter(Boolean);
 
   const website = profile.blog
-    ? profile.blog.startsWith("http")
+    ? /^https?:\/\//i.test(profile.blog)
       ? profile.blog
       : `https://${profile.blog}`
     : null;
 
   const companyName = profile.company?.replace(/^@/, "");
+
+  const renderBioLine = (line, index) => {
+    const companyMention = "@UptimeAI";
+    const mentionIndex = line.indexOf(companyMention);
+
+    if (mentionIndex === -1) {
+      return <p key={`${index}-${line}`}>{line}</p>;
+    }
+
+    return (
+      <p key={`${index}-${line}`}>
+        {line.slice(0, mentionIndex)}
+        <a
+          className="profile-company-mention"
+          href="https://github.com/UptimeAI"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {companyMention}
+        </a>
+        {line.slice(mentionIndex + companyMention.length)}
+      </p>
+    );
+  };
 
   return (
     <aside className="profile-sidebar">
@@ -33,6 +57,18 @@ const ProfileSidebar = ({
           src={profile.avatar_url}
           alt={`${profile.login}'s avatar`}
         />
+
+        <span
+          className="avatar-status"
+          role="img"
+          aria-label="Status: Focusing"
+          title="Focusing"
+        >
+          <span className="avatar-status-emoji" aria-hidden="true">
+            🎯
+          </span>
+          <span className="avatar-status-text">Focusing</span>
+        </span>
       </div>
 
       <div className="profile-heading">
@@ -48,40 +84,23 @@ const ProfileSidebar = ({
       </a>
 
       {bioLines.length > 0 && (
-        <div className="profile-bio">
-          <p>
-            {bioLines[0].includes("@UptimeAI") ? (
-              <>
-                {bioLines[0].split("@UptimeAI")[0]}
-                <a
-                  className="profile-company-mention"
-                  href="https://github.com/UptimeAI"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  @UptimeAI
-                </a>
-              </>
-            ) : (
-              bioLines[0]
-            )}
-          </p>
-
-          {bioLines.slice(1).map((line, index) => (
-            <p key={`${index}-${line}`}>{line}</p>
-          ))}
-        </div>
+        <div className="profile-bio">{bioLines.map(renderBioLine)}</div>
       )}
 
       <div className="profile-followers">
         <Users size={16} aria-hidden="true" />
-        <span>
+
+        <a href={`https://github.com/${profile.login}?tab=followers`}>
           <strong>{profile.followers ?? 0}</strong> followers
+        </a>
+
+        <span className="followers-separator" aria-hidden="true">
+          ·
         </span>
-        <span aria-hidden="true">·</span>
-        <span>
+
+        <a href={`https://github.com/${profile.login}?tab=following`}>
           <strong>{profile.following ?? 0}</strong> following
-        </span>
+        </a>
       </div>
 
       <div className="profile-details">
@@ -110,23 +129,10 @@ const ProfileSidebar = ({
           <p>
             <LinkIcon size={16} aria-hidden="true" />
             <a href={website} target="_blank" rel="noreferrer">
-              {profile.blog.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+              {profile.blog.replace(/^https?:\/\//i, "").replace(/\/$/, "")}
             </a>
           </p>
         )}
-
-        {/* {profile.linkedin_username && (
-          <p>
-            <Linkedin size={16} aria-hidden="true" />
-            <a
-              href={`https://www.linkedin.com/in/${profile.linkedin_username}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              in/{profile.linkedin_username}
-            </a>
-          </p>
-        )} */}
 
         {profile.twitter_username && (
           <p>
@@ -145,6 +151,7 @@ const ProfileSidebar = ({
       {!organizationsLoading && organizations.length > 0 && (
         <section className="profile-organizations">
           <h2>Organizations</h2>
+
           <div className="organization-list">
             {organizations.map((organization) => (
               <a
