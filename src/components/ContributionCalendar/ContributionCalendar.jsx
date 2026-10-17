@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { GitCommit, GitPullRequest, Sparkles } from "lucide-react";
+import {
+  GitCommit,
+  GitPullRequest,
+  Sparkles,
+  ExternalLink,
+} from "lucide-react";
 import useGitHubContributions from "../../hooks/useGitHubContributions";
 import useGitHubActivity from "../../hooks/useGitHubActivity";
 import { getGitHubOrganizations } from "../../services/githubApi";
@@ -119,6 +124,7 @@ const ContributionCalendar = () => {
   const [organizations, setOrganizations] = useState([]);
   const [organizationsError, setOrganizationsError] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
+  const [showActivityInfo, setShowActivityInfo] = useState(false);
 
   const { contributions, total, loading, error } =
     useGitHubContributions(selectedYear);
@@ -536,13 +542,36 @@ const ContributionCalendar = () => {
             <button
               className="show-more-activity"
               type="button"
-              onClick={(event) =>
-                event.currentTarget.classList.toggle("expanded")
-              }
+              aria-expanded={showActivityInfo}
+              aria-controls="activity-api-notice"
+              onClick={() => setShowActivityInfo((current) => !current)}
             >
-              <span>Show more activity</span>
+              <span>
+                {showActivityInfo ? "Show less activity" : "Show more activity"}
+              </span>
               <Sparkles size={14} aria-hidden="true" />
             </button>
+
+            {showActivityInfo && (
+              <div
+                className="activity-api-notice"
+                id="activity-api-notice"
+                role="status"
+              >
+                <p>
+                  The public GitHub API does not expose enough information to
+                  reproduce the complete contribution activity feed here.
+                </p>
+                <a
+                  href="https://github.com/shreeramk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View full activity on GitHub
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
+              </div>
+            )}
           </section>
         </div>
 
