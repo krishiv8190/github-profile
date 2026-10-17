@@ -8,10 +8,11 @@ import {
   BookMarked,
   Bot,
   Command,
+  ChevronDown,
 } from "lucide-react";
 import "./Header.css";
 
-const Header = () => {
+const Header = ({ avatarUrl }) => {
   return (
     <header className="site-header">
       <div className="header-left">
@@ -36,7 +37,9 @@ const Header = () => {
           </svg>
         </a>
 
-        <strong className="header-username">shreeramk</strong>
+        <a className="header-username" href="https://github.com/shreeramk">
+          shreeramk
+        </a>
       </div>
 
       <div className="header-actions">
@@ -61,29 +64,50 @@ const Header = () => {
           </button>
         </div>
 
-        <button
-          className="icon-button optional-header-action"
-          type="button"
-          aria-label="Copilot"
-        >
-          <Bot size={16} />
-        </button>
+        <div className="header-action-group copilot-group">
+          <button
+            className="icon-button copilot-button"
+            type="button"
+            aria-label="Copilot"
+          >
+            <Bot size={16} />
+          </button>
 
-        <button
-          className="icon-button create-button"
-          type="button"
-          aria-label="Create new"
-        >
-          <Plus size={16} />
-          <span className="dropdown-indicator">⌄</span>
-        </button>
+          <button
+            className="icon-button dropdown-button copilot-dropdown"
+            type="button"
+            aria-label="Open Copilot menu"
+            aria-haspopup="true"
+          >
+            <ChevronDown size={14} />
+          </button>
+        </div>
+
+        <div className="header-action-group create-group">
+          <button
+            className="icon-button create-button"
+            type="button"
+            aria-label="Create new"
+          >
+            <Plus size={17} />
+          </button>
+
+          <button
+            className="icon-button dropdown-button create-dropdown"
+            type="button"
+            aria-label="Open create menu"
+            aria-haspopup="true"
+          >
+            <ChevronDown size={14} />
+          </button>
+        </div>
 
         <button
           className="icon-button optional-header-action"
           type="button"
           aria-label="Issues"
         >
-          <CircleDot size={16} />
+          <CircleDot size={17} />
         </button>
 
         <button
@@ -91,7 +115,7 @@ const Header = () => {
           type="button"
           aria-label="Pull requests"
         >
-          <GitPullRequest size={16} />
+          <GitPullRequest size={17} />
         </button>
 
         <button
@@ -99,22 +123,31 @@ const Header = () => {
           type="button"
           aria-label="Repositories"
         >
-          <BookMarked size={16} />
+          <BookMarked size={17} />
         </button>
 
         <button
-          className="icon-button"
+          className="icon-button notification-button"
           type="button"
           aria-label="Notifications"
         >
-          <Bell size={16} />
+          <Bell size={17} />
         </button>
 
-        <img
-          className="header-avatar"
-          src="https://avatars.githubusercontent.com/u/47680902?v=4"
-          alt="GitHub account avatar"
-        />
+        <a
+          className="header-avatar-link"
+          href="https://github.com/shreeramk"
+          aria-label="View shreeramk profile"
+        >
+          <img
+            className="header-avatar"
+            src={
+              avatarUrl ||
+              "https://avatars.githubusercontent.com/u/47680902?v=4"
+            }
+            alt="shreeramk"
+          />
+        </a>
       </div>
     </header>
   );
