@@ -142,8 +142,7 @@ const Header = ({ avatarUrl }) => {
           <img
             className="header-avatar"
             src={
-              avatarUrl ||
-              "https://avatars.githubusercontent.com/u/47680902?v=4"
+              avatarUrl || "https://avatars.githubusercontent.com/u/5489153?v=4"
             }
             alt="shreeramk"
           />

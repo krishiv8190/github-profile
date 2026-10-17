@@ -437,7 +437,7 @@ const ContributionCalendar = () => {
                     className="chart-axis"
                   />
                   <line
-                    x1="8"
+                    x1="26"
                     y1="110"
                     x2="232"
                     y2="110"
