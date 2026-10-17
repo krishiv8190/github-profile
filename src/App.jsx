@@ -9,6 +9,36 @@ import useGitHubRepositories from "./hooks/useGitHubRepositories";
 import useGitHubOrganizations from "./hooks/useGitHubOrganizations";
 import "./App.css";
 
+const ProfileSidebarSkeleton = () => (
+  <aside
+    className="profile-sidebar profile-sidebar-skeleton"
+    aria-label="Loading GitHub profile"
+    aria-busy="true"
+  >
+    <div className="skeleton skeleton-avatar" />
+
+    <div className="skeleton-profile-heading">
+      <div className="skeleton skeleton-heading" />
+      <div className="skeleton skeleton-subheading" />
+    </div>
+
+    <div className="skeleton skeleton-button" />
+
+    <div className="skeleton-profile-lines">
+      <div className="skeleton skeleton-line" />
+      <div className="skeleton skeleton-line skeleton-line-short" />
+      <div className="skeleton skeleton-line" />
+      <div className="skeleton skeleton-line skeleton-line-medium" />
+    </div>
+
+    <div className="skeleton-profile-details">
+      <div className="skeleton skeleton-line skeleton-line-medium" />
+      <div className="skeleton skeleton-line skeleton-line-short" />
+      <div className="skeleton skeleton-line" />
+    </div>
+  </aside>
+);
+
 const App = () => {
   const [activeTab, setActiveTab] = useState("Overview");
 
@@ -42,9 +72,7 @@ const App = () => {
 
       <main className="page-layout">
         {profileLoading ? (
-          <aside className="profile-sidebar">
-            <p className="section-message">Loading profile...</p>
-          </aside>
+          <ProfileSidebarSkeleton />
         ) : profileError ? (
           <aside className="profile-sidebar">
             <p className="section-message" role="alert">
