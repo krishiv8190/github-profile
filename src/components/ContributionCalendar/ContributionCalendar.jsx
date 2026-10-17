@@ -1,9 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GitCommit, GitPullRequest, Sparkles } from "lucide-react";
 import useGitHubContributions from "../../hooks/useGitHubContributions";
+import useGitHubActivity from "../../hooks/useGitHubActivity";
+import { getGitHubOrganizations } from "../../services/githubApi";
 import "./ContributionCalendar.css";
 
 const CURRENT_YEAR = new Date().getFullYear();
+
 const AVAILABLE_YEARS = Array.from(
   { length: CURRENT_YEAR - 2012 },
   (_, index) => CURRENT_YEAR - index,
@@ -25,35 +28,71 @@ const formatMonth = (date) =>
 
 const ContributionCalendar = () => {
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
+  const [organizations, setOrganizations] = useState([]);
+  const [organizationsError, setOrganizationsError] = useState(false);
+
   const { contributions, total, loading, error } =
     useGitHubContributions(selectedYear);
 
-  const { weeks, monthLabels } = useMemo(() => {
-    if (!contributions.length) return { weeks: [], monthLabels: [] };
+  useGitHubActivity();
 
-    // The API includes future dates for the current year. GitHub only renders
-    // days up to today, so trim those dates before building the grid.
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadOrganizations = async () => {
+      try {
+        const data = await getGitHubOrganizations(controller.signal);
+
+        if (!controller.signal.aborted) {
+          setOrganizations(data);
+          setOrganizationsError(false);
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setOrganizationsError(true);
+        }
+      }
+    };
+
+    loadOrganizations();
+
+    return () => controller.abort();
+  }, []);
+
+  const { weeks, monthLabels } = useMemo(() => {
+    if (!contributions.length) {
+      return { weeks: [], monthLabels: [] };
+    }
+
     const today = new Date();
+
     const visibleContributions = contributions.filter((day) => {
       const date = new Date(`${day.date}T00:00:00`);
+
       return (
         selectedYear !== CURRENT_YEAR ||
         date <= new Date(today.getFullYear(), today.getMonth(), today.getDate())
       );
     });
 
-    if (!visibleContributions.length) return { weeks: [], monthLabels: [] };
+    if (!visibleContributions.length) {
+      return { weeks: [], monthLabels: [] };
+    }
 
     const firstDate = new Date(`${visibleContributions[0].date}T00:00:00`);
-    const leadingDays = (firstDate.getDay() + 6) % 7;
+    const leadingDays = firstDate.getDay();
+
     const days = [
       ...Array.from({ length: leadingDays }, () => null),
       ...visibleContributions,
     ];
 
-    while (days.length % 7 !== 0) days.push(null);
+    while (days.length % 7 !== 0) {
+      days.push(null);
+    }
 
     const calendarWeeks = [];
+
     for (let index = 0; index < days.length; index += 7) {
       calendarWeeks.push(days.slice(index, index + 7));
     }
@@ -64,9 +103,16 @@ const ContributionCalendar = () => {
     visibleContributions.forEach((day, dayIndex) => {
       const date = new Date(`${day.date}T00:00:00`);
       const month = date.getMonth();
+
       if (month !== previousMonth) {
         const weekIndex = Math.floor((leadingDays + dayIndex) / 7);
-        labels.push({ index: weekIndex, month, label: formatMonth(date) });
+
+        labels.push({
+          index: weekIndex,
+          month,
+          label: formatMonth(date),
+        });
+
         previousMonth = month;
       }
     });
@@ -162,33 +208,32 @@ const ContributionCalendar = () => {
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-            )}
 
-            {!loading && !error && hasContributions && (
-              <div className="contribution-calendar-footer">
-                <a
-                  href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Learn how we count contributions
-                </a>
-                <div
-                  className="contribution-legend"
-                  aria-label="Contribution levels"
-                >
-                  <span>Less</span>
-                  {CONTRIBUTION_COLORS.map((color, index) => (
-                    <span
-                      key={color}
-                      className="contribution-legend-square"
-                      style={{ backgroundColor: color }}
-                      aria-label={`Contribution level ${index}`}
-                    />
-                  ))}
-                  <span>More</span>
+                  <div className="contribution-calendar-footer">
+                    <a
+                      href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Learn how we count contributions
+                    </a>
+
+                    <div
+                      className="contribution-legend"
+                      aria-label="Contribution levels"
+                    >
+                      <span>Less</span>
+                      {CONTRIBUTION_COLORS.map((color, index) => (
+                        <span
+                          key={color}
+                          className="contribution-legend-square"
+                          style={{ backgroundColor: color }}
+                          aria-label={`Contribution level ${index}`}
+                        />
+                      ))}
+                      <span>More</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -197,6 +242,7 @@ const ContributionCalendar = () => {
           <div className="activity-overview">
             <div className="activity-overview-copy">
               <h3>Activity overview</h3>
+
               <div className="activity-org-tags">
                 <a
                   href="https://github.com/UptimeAI"
@@ -205,6 +251,7 @@ const ContributionCalendar = () => {
                 >
                   <span className="org-tag-icon">✿</span> @UptimeAI
                 </a>
+
                 <a
                   href="https://github.com/timescale"
                   target="_blank"
@@ -213,6 +260,7 @@ const ContributionCalendar = () => {
                   <span className="org-tag-icon timescale">◉</span> @timescale
                 </a>
               </div>
+
               <p className="activity-summary">
                 <GitCommit size={15} aria-hidden="true" />
                 <span>
@@ -261,22 +309,24 @@ const ContributionCalendar = () => {
                 <br />
                 Pull requests
               </span>
+
               <svg
-                viewBox="0 0 240 220"
+                viewBox="0 0 240 240"
+                preserveAspectRatio="xMidYMid meet"
                 role="img"
-                aria-label="Commit, pull request, issue and code review activity"
+                aria-label="83 percent commits and 17 percent pull requests"
               >
                 <line
                   x1="120"
-                  y1="22"
+                  y1="8"
                   x2="120"
-                  y2="192"
+                  y2="212"
                   className="chart-axis"
                 />
                 <line
-                  x1="26"
+                  x1="8"
                   y1="110"
-                  x2="214"
+                  x2="232"
                   y2="110"
                   className="chart-axis"
                 />
@@ -314,14 +364,17 @@ const ContributionCalendar = () => {
         aria-labelledby="contribution-activity-title"
       >
         <h2 id="contribution-activity-title">Contribution activity</h2>
+
         <div className="activity-month-heading">
           <strong>October 2025</strong>
           <span />
         </div>
+
         <div className="activity-timeline">
           <div className="timeline-icon">
-            <GitCommit size={17} aria-hidden="true" />
+            <GitCommit size={15} aria-hidden="true" />
           </div>
+
           <div className="timeline-content">
             <p>
               <span>
@@ -330,12 +383,15 @@ const ContributionCalendar = () => {
               <time>Oct 1 – Oct 31</time>
             </p>
           </div>
+
           <div className="timeline-decoration" />
         </div>
+
         <div className="activity-timeline pull-request-timeline">
           <div className="timeline-icon">
-            <GitPullRequest size={17} aria-hidden="true" />
+            <GitPullRequest size={15} aria-hidden="true" />
           </div>
+
           <div className="timeline-content">
             <p>
               <span>
@@ -343,6 +399,7 @@ const ContributionCalendar = () => {
               </span>
               <time>Oct 1 – Oct 31</time>
             </p>
+
             <ul className="activity-repository-list">
               <li>
                 <a href="https://github.com/UptimeAI/uptime_webapp">
@@ -377,8 +434,10 @@ const ContributionCalendar = () => {
               </li>
             </ul>
           </div>
+
           <div className="timeline-decoration" />
         </div>
+
         <button
           className="show-more-activity"
           type="button"

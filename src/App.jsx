@@ -32,7 +32,7 @@ const App = () => {
 
   return (
     <div className="app">
-      <Header />
+      <Header avatarUrl={profile?.avatar_url} />
 
       <ProfileTabs
         activeTab={activeTab}
@@ -90,9 +90,17 @@ const App = () => {
       </main>
 
       <footer className="site-footer">
-        <span>GitHub profile recreation</span>
+        <span className="footer-brand">
+          <span aria-hidden="true">●</span> © {new Date().getFullYear()} GitHub,
+          Inc.
+        </span>
+        <a href="https://github.com">Terms</a>
+        <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">
+          Privacy
+        </a>
         <a href="https://docs.github.com">Docs</a>
-        <a href="https://support.github.com">GitHub Docs</a>
+        <a href="https://support.github.com">Contact</a>
+        <a href="https://github.com">Manage cookies</a>
       </footer>
     </div>
   );

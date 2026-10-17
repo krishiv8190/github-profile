@@ -69,3 +69,10 @@ export async function getGitHubContributions(year, signal) {
 
   return response.json();
 }
+
+export function getGitHubPublicEvents(signal) {
+  return fetchGitHubData(
+    `/users/${GITHUB_USERNAME}/events/public?per_page=100`,
+    signal,
+  );
+}
