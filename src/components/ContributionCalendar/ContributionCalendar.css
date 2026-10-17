@@ -309,25 +309,29 @@
 
 /* ========================================
    Activity graph
-   Preserve manually tuned graph styling
 ======================================== */
 
 .activity-chart {
   position: relative;
   min-width: 0;
-  min-height: 13.5rem;
+  min-height: 17rem;
+  box-sizing: border-box;
   margin: 1rem 0;
   border-left: 1px solid #d1d9e0;
   color: #59636e;
   font-size: 0.75rem;
+  --chart-size: min(58%, 13rem);
 }
 
 .activity-chart svg {
   position: absolute;
-  top: 0.75rem;
-  left: 22.5%;
-  width: 55%;
-  height: calc(100% - 1.5rem);
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: var(--chart-size);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
   overflow: visible;
 }
 
@@ -349,33 +353,126 @@
 .chart-label {
   position: absolute;
   z-index: 1;
+  margin: 0;
   text-align: center;
   line-height: 1.25;
   white-space: nowrap;
+  pointer-events: none;
 }
 
+/* Top and bottom labels stay centered on the vertical axis. */
 .chart-label-top {
-  top: -0.2rem;
+  top: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.chart-label-right {
-  top: 46%;
-  right: 16%;
-  transform: translateY(-50%);
-}
-
-.chart-label-left {
-  top: 50%;
-  left: 12%;
-  transform: translateY(-50%);
 }
 
 .chart-label-bottom {
-  bottom: -0.3rem;
+  bottom: 0.5rem;
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Side labels share the chart's center line and stay outside the graph. */
+.chart-label-left {
+  top: 50%;
+  left: 0;
+  width: calc(50% - 6.75rem);
+  min-width: 3rem;
+  transform: translateY(-50%);
+  text-align: center;
+  white-space: normal;
+}
+
+.chart-label-right {
+  top: 50%;
+  right: 0;
+  width: calc(50% - 6.75rem);
+  min-width: 3rem;
+  transform: translateY(-50%);
+  text-align: center;
+  white-space: normal;
+}
+
+/* Tablet: scale the chart and keep every label aligned to its center. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .activity-overview {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .activity-chart {
+    min-height: 15rem;
+    font-size: 0.6875rem;
+    --chart-size: min(58%, 12rem);
+  }
+
+  .chart-label-left,
+  .chart-label-right {
+    width: calc(50% - 4.25rem);
+    /* min-width: 2.5rem; */
+    top: 47%;
+  }
+
+  .chart-label-bottom {
+    bottom: 0.375rem;
+  }
+}
+
+/* Mobile: stack the overview and center the graph in its own full-width row. */
+@media (max-width: 760px) {
+  .activity-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .activity-chart {
+    min-height: 16rem;
+    box-sizing: border-box;
+    margin: 0;
+    border-left: 0;
+    border-top: 1px solid #d1d9e0;
+    font-size: 0.75rem;
+    --chart-size: min(58%, 13rem);
+  }
+
+  .chart-label-top {
+    top: 0.375rem;
+  }
+
+  .chart-label-left,
+  .chart-label-right {
+    width: calc(50% - var(--chart-size) / 2 - 0.375rem);
+    min-width: 0;
+    top: 47%;
+  }
+
+  .chart-label-left {
+    left: 0.125rem;
+  }
+
+  .chart-label-right {
+    right: 0.125rem;
+  }
+
+  .chart-label-bottom {
+    bottom: 0.375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .activity-chart {
+    min-height: 15rem;
+    font-size: 0.6875rem;
+    --chart-size: 54%;
+  }
+
+  .chart-label-left,
+  .chart-label-right {
+    width: calc(50% - var(--chart-size) / 2 - 0.25rem);
+  }
+
+  .chart-label-bottom {
+    bottom: 0.25rem;
+  }
 }
 
 /* ========================================
@@ -796,24 +893,6 @@
 
   .activity-overview {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .activity-chart {
-    min-height: 13.5rem;
-    margin: 1rem 0;
-    border-left: 0;
-    border-top: 1px solid #d1d9e0;
-  }
-
-  .activity-chart svg {
-    position: absolute;
-    width: min(55%, 13rem);
-    height: auto;
-    aspect-ratio: 1 / 1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: visible;
   }
 
   .activity-timeline {

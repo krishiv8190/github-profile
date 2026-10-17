@@ -200,13 +200,15 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
 }
 
 .header-avatar {
   display: block;
-  width: 2rem;
-  height: 2rem;
+  width: 100%;
+  height: 100%;
   flex: 0 0 auto;
   object-fit: cover;
   border: 1px solid #d1d9e0;
@@ -232,44 +234,34 @@
 
   .search-control {
     min-width: 0;
-  }
-
-  .search-control span {
-    display: none;
-  }
-
-  .command-button {
-    display: none;
-  }
-
-  .search-control {
     width: 2rem;
     padding: 0;
     justify-content: center;
     border-radius: 0.375rem;
   }
+
+  .search-control span,
+  .command-button {
+    display: none;
+  }
 }
 
 @media (max-width: 760px) {
   .site-header {
-    gap: 0.375rem;
-    padding: 0.5rem 0.625rem;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .header-left {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     gap: 0.5rem;
+    min-width: 0;
   }
 
   .header-actions {
     flex: 0 0 auto;
-    gap: 0.25rem;
-  }
-
-  .header-username {
-    max-width: 5.75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    gap: 0.375rem;
   }
 
   .search-control,
@@ -281,20 +273,33 @@
     width: 2rem;
     height: 2rem;
   }
+
+  .header-username {
+    max-width: 7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-avatar-link {
+    width: 2rem;
+    height: 2rem;
+  }
 }
 
 @media (max-width: 420px) {
   .site-header {
-    gap: 0.25rem;
+    gap: 0.375rem;
     padding-inline: 0.5rem;
   }
 
   .header-left {
+    flex: 1 1 auto;
     gap: 0.375rem;
   }
 
   .header-actions {
-    gap: 0.1875rem;
+    flex: 0 0 auto;
+    gap: 0.25rem;
   }
 
   .github-mark svg {
@@ -303,56 +308,64 @@
   }
 
   .header-username {
-    max-width: 5rem;
+    max-width: 5.5rem;
     padding-inline: 0.125rem;
     margin-inline: 0;
     font-size: 0.8125rem;
   }
 
   .header-actions .icon-button {
-    width: 1.75rem;
-    height: 1.875rem;
-  }
-
-  .header-actions .dropdown-button {
-    width: 1.25rem;
-  }
-
-  .header-avatar,
-  .header-avatar-link {
-    width: 1.875rem;
-    height: 1.875rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
   }
 
   .header-action-group {
-    min-width: 0;
+    gap: 0;
   }
 
   .header-action-group .icon-button {
-    min-width: 0;
+    margin-left: 0;
+  }
+
+  /* Keep the primary actions, remove their extra dropdown buttons. */
+  .copilot-dropdown,
+  .create-dropdown {
+    display: none;
   }
 
   .copilot-button,
   .create-button {
-    width: 1.75rem;
+    width: 2rem;
+  }
+
+  .header-avatar-link,
+  .header-avatar {
+    width: 2rem;
+    height: 2rem;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 340px) {
+  .site-header {
+    gap: 0.25rem;
+    padding-inline: 0.375rem;
+  }
+
   .header-left {
     gap: 0.25rem;
   }
 
-  .header-username {
-    max-width: 4rem;
-  }
-
-  .copilot-dropdown {
-    display: none;
-  }
-
   .header-actions {
-    gap: 0.125rem;
+    gap: 0.1875rem;
+  }
+
+  .header-username {
+    max-width: 4.25rem;
+  }
+
+  .header-actions .icon-button.menu-button {
+    width: 1.875rem;
   }
 }
 
