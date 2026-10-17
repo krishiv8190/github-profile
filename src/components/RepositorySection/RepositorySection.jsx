@@ -10,20 +10,42 @@ const PINNED_REPOSITORY_NAMES = [
   "node-opcua-1",
 ];
 
+const RepositoryCardSkeleton = () => (
+  <div className="repository-skeleton" aria-hidden="true">
+    <div className="repository-skeleton-heading">
+      <span className="skeleton repository-skeleton-icon" />
+      <span className="skeleton repository-skeleton-name" />
+    </div>
+
+    <span className="skeleton repository-skeleton-description" />
+    <span className="skeleton repository-skeleton-description repository-skeleton-description-short" />
+
+    <div className="repository-skeleton-footer">
+      <span className="skeleton repository-skeleton-language-dot" />
+      <span className="skeleton repository-skeleton-language" />
+      <span className="skeleton repository-skeleton-meta" />
+    </div>
+  </div>
+);
+
 const RepositorySection = ({ repositories = [], loading, error }) => {
   if (loading) {
     return (
-      <section className="repository-section">
+      <section className="repository-section" aria-busy="true">
         <div className="section-heading">
           <h2>Popular repositories</h2>
-          <a
-            className="subtle-link"
-            href="https://github.com/shreeramk?tab=repositories"
-          >
-            Customize your pins
-          </a>
+          <span className="subtle-link">Customize your pins</span>
         </div>
-        <p className="section-message">Loading repositories...</p>
+
+        <div className="repository-grid repository-grid-skeleton">
+          {Array.from({ length: 6 }, (_, index) => (
+            <RepositoryCardSkeleton key={index} />
+          ))}
+        </div>
+
+        <span className="sr-only" role="status">
+          Loading repositories...
+        </span>
       </section>
     );
   }
@@ -57,14 +79,7 @@ const RepositorySection = ({ repositories = [], loading, error }) => {
     ...pinnedRepositories,
     ...remainingRepositories,
   ].slice(0, 6);
-  console.table(
-    selectedRepositories.map(({ name, language, fork, parent }) => ({
-      name,
-      language,
-      fork,
-      parent: parent?.full_name,
-    })),
-  );
+
   return (
     <section className="repository-section">
       <div className="section-heading">
