@@ -18,9 +18,38 @@ export function getGitHubProfile() {
   return fetchGitHubData(`/users/${GITHUB_USERNAME}`);
 }
 
-export function getGitHubRepositories() {
-  return fetchGitHubData(
+export async function getGitHubRepositories(signal) {
+  const repositories = await fetchGitHubData(
     `/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&type=owner`,
+    signal,
+  );
+
+  return Promise.all(
+    repositories.map(async (repository) => {
+      if (!repository.fork) {
+        return repository;
+      }
+
+      try {
+        const details = await fetchGitHubData(
+          `/repos/${GITHUB_USERNAME}/${repository.name}`,
+          signal,
+        );
+
+        const parent = details.parent ?? repository.parent ?? null;
+        const source = details.source ?? repository.source ?? null;
+
+        return {
+          ...repository,
+          parent,
+          source,
+          language:
+            repository.language ?? parent?.language ?? source?.language ?? null,
+        };
+      } catch {
+        return repository;
+      }
+    }),
   );
 }
 

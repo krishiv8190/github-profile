@@ -64,7 +64,6 @@ const RepositoryCard = ({ repository }) => {
         )}
 
         {fork && !forkSource && <span className="repository-fork">Fork</span>}
-
         {forks_count > 0 && (
           <span className="repository-forks">
             <span aria-hidden="true">⑂</span> {forks_count}
