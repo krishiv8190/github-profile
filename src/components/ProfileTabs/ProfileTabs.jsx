@@ -1,6 +1,8 @@
 import { BookOpen, BookMarked, Table2, Package, Star } from "lucide-react";
 import "./ProfileTabs.css";
 
+const GITHUB_PROFILE_URL = "https://github.com/shreeramk";
+
 const tabs = [
   { label: "Overview", icon: BookOpen, key: "overview" },
   { label: "Repositories", icon: BookMarked, key: "repositories" },
@@ -9,12 +11,28 @@ const tabs = [
   { label: "Stars", icon: Star, key: "stars" },
 ];
 
+const tabUrls = {
+  repositories: `${GITHUB_PROFILE_URL}?tab=repositories`,
+  projects: `${GITHUB_PROFILE_URL}?tab=projects`,
+  packages: `${GITHUB_PROFILE_URL}?tab=packages`,
+  stars: `${GITHUB_PROFILE_URL}?tab=stars`,
+};
+
 const ProfileTabs = ({
   activeTab,
   onTabChange,
   repositoryCount = 0,
   starsCount = 5,
 }) => {
+  const handleTabClick = (label, key) => {
+    if (key === "overview") {
+      onTabChange(label);
+      return;
+    }
+
+    window.location.href = tabUrls[key];
+  };
+
   return (
     <nav className="profile-tabs" aria-label="User">
       <ul className="profile-tabs-list">
@@ -26,7 +44,7 @@ const ProfileTabs = ({
               <button
                 className={`profile-tab${isActive ? " active" : ""}`}
                 type="button"
-                onClick={() => onTabChange(label)}
+                onClick={() => handleTabClick(label, key)}
                 aria-current={isActive ? "page" : undefined}
               >
                 <Icon
