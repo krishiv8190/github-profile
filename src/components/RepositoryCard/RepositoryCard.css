@@ -1,0 +1,146 @@
+.repository-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 7rem;
+  padding: 1rem 1.25rem;
+  background: #fff;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+}
+
+.repository-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.repository-name {
+  min-width: 0;
+  color: #0969da;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.repository-name:hover,
+.repository-fork-source a:hover {
+  text-decoration: underline;
+}
+
+.visibility-label {
+  flex-shrink: 0;
+  padding: 0 0.5rem;
+  color: #59636e;
+  background: #fff;
+  border: 1px solid #d1d9e0;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  line-height: 1.5rem;
+}
+
+.repository-fork-source {
+  margin: 0.125rem 0 0;
+  color: #59636e;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repository-fork-source a {
+  color: #59636e;
+  text-decoration: underline;
+  text-decoration-color: #d1d9e0;
+  text-underline-offset: 2px;
+}
+
+.repository-description {
+  margin: 1rem 0 0;
+  color: #59636e;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repository-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  color: #59636e;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.repository-language,
+.repository-stars,
+.repository-fork,
+.repository-forks {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.language-dot {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #8c959f;
+}
+
+.language-javascript {
+  background: #f1e05a;
+}
+
+.language-typescript {
+  background: #3178c6;
+}
+
+.language-python,
+.language-jupyter-notebook {
+  background: #3572a5;
+}
+
+.language-dart {
+  background: #00b4ab;
+}
+
+.language-html {
+  background: #e34c26;
+}
+
+.language-css {
+  background: #663399;
+}
+
+.language-java {
+  background: #b07219;
+}
+
+.language-c {
+  background: #555;
+}
+
+.language-c-- {
+  background: #f34b7d;
+}
+
+@media (max-width: 600px) {
+  .repository-card {
+    min-height: 7rem;
+    padding: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repository-card {
+    scroll-behavior: auto;
+  }
+}

@@ -1,122 +1,109 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Header from "./components/Header/Header";
+import ProfileTabs from "./components/ProfileTabs/ProfileTabs";
+import ProfileSidebar from "./components/ProfileSidebar/ProfileSidebar";
+import RepositorySection from "./components/RepositorySection/RepositorySection";
+import ContributionCalendar from "./components/ContributionCalendar/ContributionCalendar";
+import { useGitHubProfile } from "./hooks/useGitHubProfile";
+import useGitHubRepositories from "./hooks/useGitHubRepositories";
+import useGitHubOrganizations from "./hooks/useGitHubOrganizations";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [activeTab, setActiveTab] = useState("Overview");
+
+  const {
+    profile,
+    loading: profileLoading,
+    error: profileError,
+  } = useGitHubProfile();
+
+  const {
+    repositories,
+    loading: repositoriesLoading,
+    error: repositoriesError,
+  } = useGitHubRepositories();
+
+  const {
+    organizations,
+    loading: organizationsLoading,
+    error: organizationsError,
+  } = useGitHubOrganizations();
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <Header avatarUrl={profile?.avatar_url} />
 
-      <div className="ticks"></div>
+      <ProfileTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        repositoryCount={profile?.public_repos ?? 0}
+      />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <main className="page-layout">
+        {profileLoading ? (
+          <aside className="profile-sidebar">
+            <p className="section-message">Loading profile...</p>
+          </aside>
+        ) : profileError ? (
+          <aside className="profile-sidebar">
+            <p className="section-message" role="alert">
+              Unable to load GitHub profile.
+            </p>
+          </aside>
+        ) : (
+          <ProfileSidebar
+            profile={profile}
+            organizations={organizations}
+            organizationsLoading={organizationsLoading}
+            organizationsError={organizationsError}
+          />
+        )}
+
+        <div className="main-content">
+          {activeTab === "Overview" && (
+            <>
+              <RepositorySection
+                repositories={repositories}
+                loading={repositoriesLoading}
+                error={repositoriesError}
+              />
+              <ContributionCalendar />
+            </>
+          )}
+
+          {activeTab === "Repositories" && (
+            <RepositorySection
+              repositories={repositories}
+              loading={repositoriesLoading}
+              error={repositoriesError}
+            />
+          )}
+
+          {["Projects", "Packages", "Stars"].includes(activeTab) && (
+            <section className="empty-section">
+              <h2>{activeTab}</h2>
+              <p className="section-message">Nothing to display here yet.</p>
+            </section>
+          )}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </main>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+      <footer className="site-footer">
+        <span className="footer-brand">
+          <span aria-hidden="true">●</span> © {new Date().getFullYear()} GitHub,
+          Inc.
+        </span>
+        <a href="https://github.com">Terms</a>
+        <a href="https://docs.github.com/site-policy/privacy-policies/github-privacy-statement">
+          Privacy
+        </a>
+        <a href="https://docs.github.com">Docs</a>
+        <a href="https://support.github.com">Contact</a>
+        <a href="https://github.com">Manage cookies</a>
+      </footer>
+    </div>
+  );
+};
 
-export default App
+export default App;

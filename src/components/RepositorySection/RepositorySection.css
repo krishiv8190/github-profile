@@ -1,0 +1,61 @@
+.repository-section {
+  min-width: 0;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-heading h2,
+.repository-section h2 {
+  margin: 0;
+  color: #1f2328;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.subtle-link {
+  flex-shrink: 0;
+  color: #0969da;
+  font-size: 0.75rem;
+}
+
+.repository-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.repository-grid .repository-card {
+  width: 100%;
+  min-width: 0;
+  min-height: 7rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.repository-grid .repository-description,
+.repository-grid .repository-fork-source {
+  text-align: left;
+}
+
+@media (max-width: 1050px) {
+  .repository-grid {
+    gap: 0.625rem;
+  }
+
+  .repository-grid .repository-card {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .repository-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
