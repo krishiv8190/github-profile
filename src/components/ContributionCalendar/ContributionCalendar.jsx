@@ -26,10 +26,52 @@ const getContributionColor = (level) =>
 const formatMonth = (date) =>
   date.toLocaleDateString("en-US", { month: "short" });
 
+const formatChartDate = (date) =>
+  date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+const chartEndDate = new Date();
+const chartStartDate = new Date(chartEndDate);
+chartStartDate.setDate(chartStartDate.getDate() - 370);
+
+const activityChartDescription = `A graph representing shreeramk's contributions from ${formatChartDate(
+  chartStartDate,
+)} to ${formatChartDate(
+  chartEndDate,
+)}. The contributions are 78% commits, 22% pull requests, 0% code review, 0% issues.`;
+
+const formatContributionDate = (dateString) => {
+  const date = new Date(`${dateString}T00:00:00`);
+  const day = date.getDate();
+  const suffix =
+    day % 10 === 1 && day !== 11
+      ? "st"
+      : day % 10 === 2 && day !== 12
+        ? "nd"
+        : day % 10 === 3 && day !== 13
+          ? "rd"
+          : "th";
+
+  return `${date.toLocaleDateString("en-US", { month: "long" })} ${day}${suffix}`;
+};
+
+const getTooltipPosition = (element) => {
+  const rect = element.getBoundingClientRect();
+
+  return {
+    x: rect.left + rect.width / 2,
+    y: rect.top - 8,
+  };
+};
+
 const ContributionCalendar = () => {
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
   const [organizations, setOrganizations] = useState([]);
   const [organizationsError, setOrganizationsError] = useState(false);
+  const [activeTooltip, setActiveTooltip] = useState(null);
 
   const { contributions, total, loading, error } =
     useGitHubContributions(selectedYear);
@@ -193,16 +235,29 @@ const ContributionCalendar = () => {
                                 ? getContributionColor(day.level)
                                 : "transparent",
                             }}
-                            title={
-                              day
-                                ? `${day.count} contributions on ${day.date}`
-                                : undefined
-                            }
+                            tabIndex={day ? 0 : undefined}
+                            role={day ? "img" : undefined}
                             aria-label={
                               day
-                                ? `${day.count} contributions on ${day.date}`
+                                ? `${day.count} ${day.count === 1 ? "contribution" : "contributions"} on ${formatContributionDate(day.date)}`
                                 : undefined
                             }
+                            onMouseEnter={(event) => {
+                              if (!day) return;
+                              setActiveTooltip({
+                                text: `${day.count} ${day.count === 1 ? "contribution" : "contributions"} on ${formatContributionDate(day.date)}`,
+                                ...getTooltipPosition(event.currentTarget),
+                              });
+                            }}
+                            onMouseLeave={() => setActiveTooltip(null)}
+                            onFocus={(event) => {
+                              if (!day) return;
+                              setActiveTooltip({
+                                text: `${day.count} ${day.count === 1 ? "contribution" : "contributions"} on ${formatContributionDate(day.date)}`,
+                                ...getTooltipPosition(event.currentTarget),
+                              });
+                            }}
+                            onBlur={() => setActiveTooltip(null)}
                           />
                         ))}
                       </div>
@@ -300,12 +355,12 @@ const ContributionCalendar = () => {
               <span className="chart-label chart-label-top">Code review</span>
               <span className="chart-label chart-label-right">Issues</span>
               <span className="chart-label chart-label-left">
-                83%
+                78%
                 <br />
                 Commits
               </span>
               <span className="chart-label chart-label-bottom">
-                17%
+                22%
                 <br />
                 Pull requests
               </span>
@@ -314,8 +369,10 @@ const ContributionCalendar = () => {
                 viewBox="0 0 240 240"
                 preserveAspectRatio="xMidYMid meet"
                 role="img"
-                aria-label="83 percent commits and 17 percent pull requests"
+                aria-label="78 percent commits and 22 percent pull requests"
+                title={activityChartDescription}
               >
+                <title>{activityChartDescription}</title>
                 <line
                   x1="120"
                   y1="8"
@@ -447,6 +504,16 @@ const ContributionCalendar = () => {
           <Sparkles size={14} aria-hidden="true" />
         </button>
       </section>
+
+      {activeTooltip && (
+        <div
+          className="contribution-tooltip"
+          role="tooltip"
+          style={{ left: activeTooltip.x, top: activeTooltip.y }}
+        >
+          {activeTooltip.text}
+        </div>
+      )}
     </section>
   );
 };
