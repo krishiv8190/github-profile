@@ -1,20 +1,35 @@
 .profile-tabs {
   display: flex;
   align-items: stretch;
-  gap: 0;
-  min-height: 2.75rem;
+  min-height: 3rem;
   padding: 0 1rem;
   overflow-x: auto;
   overflow-y: hidden;
   color: #1f2328;
   background: #f6f8fa;
   border-bottom: 1px solid #d1d9e0;
-  box-sizing: border-box;
   scrollbar-width: none;
 }
 
 .profile-tabs::-webkit-scrollbar {
   display: none;
+}
+
+.profile-tabs-list {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile-tabs-item {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
 }
 
 .profile-tab {
@@ -23,16 +38,22 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  flex-shrink: 0;
-  min-height: 2.75rem;
+  min-height: 2rem;
+  margin: 0.275rem 0.125rem;
   padding: 0 0.5rem;
   color: #59636e;
   background: transparent;
   border: 0;
+  border-radius: 0.375rem;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 0.8375rem;
+  font-weight: 400;
+  line-height: 1.5;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease;
 }
 
 .profile-tab:hover {
@@ -40,9 +61,16 @@
   background: #eaeef2;
 }
 
+.profile-tab:focus-visible {
+  z-index: 1;
+  outline: 2px solid #0969da;
+  outline-offset: -2px;
+}
+
 .profile-tab.active {
   color: #1f2328;
-  font-weight: 600;
+  font-weight: 500;
+  background: transparent;
 }
 
 .profile-tab.active::after {
@@ -55,12 +83,22 @@
   content: "";
 }
 
+.profile-tab-icon {
+  display: block;
+  flex: 0 0 auto;
+  color: inherit;
+}
+
+.profile-tab-label {
+  display: inline-block;
+}
+
 .tab-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 1.5rem;
-  height: 1.25rem;
+  height: 1.5rem;
   padding: 0 0.375rem;
   color: #59636e;
   background: #eaeef2;
@@ -68,10 +106,14 @@
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1;
-  box-sizing: border-box;
 }
 
-@media (max-width: 42rem) {
+.profile-tab:hover .tab-count {
+  color: #1f2328;
+  background: #d8dee4;
+}
+
+@media (max-width: 760px) {
   .profile-tabs {
     padding-inline: 0.25rem;
   }
@@ -79,5 +121,11 @@
   .profile-tab {
     gap: 0.375rem;
     padding-inline: 0.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-tab {
+    transition: none;
   }
 }

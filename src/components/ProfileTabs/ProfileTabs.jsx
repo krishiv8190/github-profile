@@ -1,12 +1,12 @@
-import { BookOpen, Code, Package, FolderKanban, Star } from "lucide-react";
+import { BookOpen, BookMarked, Table2, Package, Star } from "lucide-react";
 import "./ProfileTabs.css";
 
 const tabs = [
-  { label: "Overview", icon: BookOpen },
-  { label: "Repositories", icon: Code },
-  { label: "Projects", icon: FolderKanban },
-  { label: "Packages", icon: Package },
-  { label: "Stars", icon: Star },
+  { label: "Overview", icon: BookOpen, key: "overview" },
+  { label: "Repositories", icon: BookMarked, key: "repositories" },
+  { label: "Projects", icon: Table2, key: "projects" },
+  { label: "Packages", icon: Package, key: "packages" },
+  { label: "Stars", icon: Star, key: "stars" },
 ];
 
 const ProfileTabs = ({
@@ -16,25 +16,40 @@ const ProfileTabs = ({
   starsCount = 5,
 }) => {
   return (
-    <nav className="profile-tabs" aria-label="Profile navigation">
-      {tabs.map(({ label, icon: Icon }) => (
-        <button
-          className={`profile-tab ${activeTab === label ? "active" : ""}`}
-          type="button"
-          key={label}
-          onClick={() => onTabChange(label)}
-          aria-current={activeTab === label ? "page" : undefined}
-        >
-          <Icon size={16} strokeWidth={1.8} />
-          <span>{label}</span>
+    <nav className="profile-tabs" aria-label="User">
+      <ul className="profile-tabs-list">
+        {tabs.map(({ label, icon: Icon, key }) => {
+          const isActive = activeTab === label;
 
-          {label === "Repositories" && (
-            <span className="tab-count">{repositoryCount}</span>
-          )}
+          return (
+            <li className="profile-tabs-item" key={key}>
+              <button
+                className={`profile-tab${isActive ? " active" : ""}`}
+                type="button"
+                onClick={() => onTabChange(label)}
+                aria-current={isActive ? "page" : undefined}
+              >
+                <Icon
+                  className="profile-tab-icon"
+                  size={16}
+                  strokeWidth={1.8}
+                  aria-hidden="true"
+                />
 
-          {label === "Stars" && <span className="tab-count">{starsCount}</span>}
-        </button>
-      ))}
+                <span className="profile-tab-label">{label}</span>
+
+                {key === "repositories" && (
+                  <span className="tab-count">{repositoryCount}</span>
+                )}
+
+                {key === "stars" && (
+                  <span className="tab-count">{starsCount}</span>
+                )}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 };
